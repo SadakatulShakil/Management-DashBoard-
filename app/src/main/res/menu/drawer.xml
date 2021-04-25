@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group>
+    <item
+        android:title="Personal">
+        <menu>
+            <item
+                android:id="@+id/prescribe_medicine"
+                android:title="Prescribe Medicine" />
+
+            <item
+                android:id="@+id/profile"
+                android:title="My Profile" />
+
+            <item
+                android:id="@+id/order"
+                android:title="My Order" />
+
+
+            <item
+                android:id="@+id/logOut"
+                android:title="Log Out" />
+        </menu>
+    </item>
+
+
+</group>
+    <group>
+        <item
+            android:title="Others">
+            <menu>
+                <item
+                    android:id="@+id/share"
+                    android:title="Share" />
+
+                <item
+                    android:id="@+id/feedback"
+                    android:title="Feedback" />
+
+                <item
+                    android:id="@+id/rate"
+                    android:title="Rate Us" />
+
+                <item
+                    android:id="@+id/about"
+                    android:title="About Us" />
+            </menu>
+        </item>
+    </group>
+</menu>
