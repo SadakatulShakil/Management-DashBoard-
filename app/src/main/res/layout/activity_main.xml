@@ -38,6 +38,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/reloadPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_reload"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -491,7 +501,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:src="@drawable/totthoapa" />
+                                android:src="@drawable/totthoapa1" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -602,7 +612,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_marginTop="55dp"
-        android:visibility="gone"
         android:background="@drawable/drawer_round"
         app:headerLayout="@layout/header_for_navigator"
         app:itemIconTint="@color/white"
