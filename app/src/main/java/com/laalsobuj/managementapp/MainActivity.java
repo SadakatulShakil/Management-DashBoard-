@@ -15,8 +15,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -36,36 +41,34 @@ import com.laalsobuj.managementapp.DashBoard.WeeklyMerchantRegisterActivity;
 import com.laalsobuj.managementapp.Model.DasboardResult.DashBoardResult;
 import com.google.android.material.navigation.NavigationView;
 
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private CardView weeklyMerchantRegisterLayout, upazilaWiseLayout, districtAndUpazilaWiseLayout, totthoApaWiseLayout, districtAndUpazilaVsListLayout;
     private Toolbar dToolbar;
-    private TextView merchantCount, totthoApaCount, productsCount, districtCount, upazilaCount, weeklyRegisterCount;
+    private TextView merchantCount, totthoApaCount, productsCount, districtCount, upazilaCount, weeklyRegisterCount, merchantProductCount;
     private ProgressBar progressBar;
     private String retrievedToken;
     private SharedPreferences preferences;
     private ImageView reloadPage;
+    private float cVersion, lVersion;
+    private String sLatestVersion, sCurrentVersion;
+    public static final String TAG = "main";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken  = preferences.getString("TOKEN",null);
-//        if(Build.VERSION.SDK_INT>=19 && Build.VERSION.SDK_INT<21){
-//            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-//        }
-//        if(Build.VERSION.SDK_INT>=19){
-//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        }
-//        if(Build.VERSION.SDK_INT>=21){
-//            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
+
         inItView();
         getDashBoardResult();
         initNavigationViewDrawer();
+        new GetLatestVersion().execute();
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, dToolbar,
                 R.string.drawer_open, R.string.drawer_closed);
         drawerToggle.getDrawerArrowDrawable().setColor(Color.WHITE);
@@ -144,6 +147,18 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
 
+                    case  R.id.appUpdate:
+                        Log.d(TAG, "clickByUpdate: " + lVersion+"....."+cVersion);
+                        if(lVersion > cVersion){
+                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id="+MainActivity.this.getPackageName())));
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "আপনার অ্যাপটি আপডেট করা আছে!", Toast.LENGTH_LONG).show();
+                        }
+                        // Toast.makeText(this, "Not Yet Publish !", Toast.LENGTH_LONG).show();
+                        break;
+
                     default:
                         break;
                 }
@@ -185,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                         districtCount.setText(dashBoardResult.getResult().getDistrict());
                         upazilaCount.setText(dashBoardResult.getResult().getUpazila());
                         weeklyRegisterCount.setText(dashBoardResult.getResult().getWeekly());
+                        merchantProductCount.setText("("+dashBoardResult.getResult().getMerchanthasproduct()+" জন মার্চেন্টের পণ্য)");
                     }else{
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(MainActivity.this, "Server error / TimeOut", Toast.LENGTH_SHORT).show();
@@ -205,6 +221,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /////Get Latest version////
+    private class GetLatestVersion extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                sLatestVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=" + getPackageName() + "&hl=en")
+                        .timeout(10000)
+                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                        .referrer("http://www.google.com")
+                        .get()
+                        .select("div.hAyfc:nth-child(4) > span:nth-child(2) > div:nth-child(1) > span:nth-child(1)")
+                        .first()
+                        .ownText();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return sLatestVersion;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            ////Get Current version////
+            try {
+                PackageInfo pInfo = MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), 0);
+                sCurrentVersion = pInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            //Log.d(TAG, "onPostExecute: " +"LatestVersion: "+sLatestVersion+"......"+"CurrentVersion: "+sCurrentVersion);
+            if(sLatestVersion != null){
+                cVersion = Float.parseFloat(sCurrentVersion);
+                lVersion = Float.parseFloat(sLatestVersion);
+
+            }
+
+        }
+    }
+
     private void inItView() {
         drawerLayout = findViewById(R.id.drawer);
         navigationView = findViewById(R.id.navigationDrawer);
@@ -222,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
         upazilaCount = findViewById(R.id.upazilaCount);
         weeklyRegisterCount = findViewById(R.id.weeklyRegisterCount);
         reloadPage = findViewById(R.id.reloadPage);
+        merchantProductCount = findViewById(R.id.merchantProductCount);
 
     }
 }

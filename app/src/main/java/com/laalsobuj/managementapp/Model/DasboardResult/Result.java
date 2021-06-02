@@ -29,6 +29,9 @@ public class Result implements Serializable {
     @SerializedName("weekly")
     @Expose
     private String weekly;
+    @SerializedName("merchanthasproduct")
+    @Expose
+    private String merchanthasproduct;
 
     public String getDistrict() {
         return district;
@@ -86,6 +89,14 @@ public class Result implements Serializable {
         this.weekly = weekly;
     }
 
+    public String getMerchanthasproduct() {
+        return merchanthasproduct;
+    }
+
+    public void setMerchanthasproduct(String merchanthasproduct) {
+        this.merchanthasproduct = merchanthasproduct;
+    }
+
     @Override
     public String toString() {
         return "Result{" +
@@ -96,6 +107,7 @@ public class Result implements Serializable {
                 ", customer='" + customer + '\'' +
                 ", products='" + products + '\'' +
                 ", weekly='" + weekly + '\'' +
+                ", merchanthasproduct='" + merchanthasproduct + '\'' +
                 '}';
     }
 }

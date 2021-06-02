@@ -8,16 +8,19 @@
 
             <item
                 android:id="@+id/profile"
-                android:title="My Profile" />
+                android:title="My Profile"
+                android:icon="@drawable/user"/>
 
             <item
                 android:id="@+id/order"
-                android:title="My Order" />
+                android:title="My Order"
+                android:icon="@drawable/order"/>
 
 
             <item
                 android:id="@+id/logOut"
-                android:title="Log Out" />
+                android:title="Log Out"
+                android:icon="@drawable/logout"/>
         </menu>
     </item>
 
@@ -29,19 +32,19 @@
             <menu>
                 <item
                     android:id="@+id/share"
-                    android:title="Share" />
+                    android:title="Share"
+                    android:icon="@drawable/share"/>
 
                 <item
                     android:id="@+id/feedback"
-                    android:title="Feedback" />
+                    android:title="Feedback"
+                    android:icon="@drawable/feedback"/>
+
 
                 <item
-                    android:id="@+id/rate"
-                    android:title="Rate Us" />
-
-                <item
-                    android:id="@+id/about"
-                    android:title="About Us" />
+                    android:id="@+id/appUpdate"
+                    android:title="App Update"
+                    android:icon="@drawable/playstore"/>
             </menu>
         </item>
     </group>
